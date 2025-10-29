@@ -1,4 +1,4 @@
-package guru.springframework.spring6resttemplate;
+package com.gudmumic.spring.rest.template;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
