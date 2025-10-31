@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import tools.jackson.databind.JsonNode;
 
 @RequiredArgsConstructor
@@ -22,14 +23,19 @@ public class BeerClientImpl implements BeerClient {
     public Page<BeerDTO> getBeerList() {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
+                .fromPath(beerPth)
+                .queryParam("pageNumber", 1)
+                .queryParam("pageSize", 25);
+
         ResponseEntity<String> stringResponse =
-                restTemplate.getForEntity(beerPth, String.class);
+                restTemplate.getForEntity(uriComponentsBuilder.toUriString(), String.class);
 
         ResponseEntity<Map> mapResponseEntity =
-                restTemplate.getForEntity(beerPth, Map.class);
+                restTemplate.getForEntity(uriComponentsBuilder.toUriString(), Map.class);
 
         ResponseEntity<JsonNode> jsonNodeResponseEntity =
-                restTemplate.getForEntity(beerPth, JsonNode.class);
+                restTemplate.getForEntity(uriComponentsBuilder.toUriString(), JsonNode.class);
 
         jsonNodeResponseEntity.getBody().findPath("content")
             .forEach(beer -> {
@@ -38,7 +44,7 @@ public class BeerClientImpl implements BeerClient {
             });
 
         ResponseEntity<BeerDTOPageImpl> pageResponseEntity =
-                restTemplate.getForEntity(beerPth, BeerDTOPageImpl.class);
+                restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BeerDTOPageImpl.class);
 
         System.out.println(stringResponse.getBody());
 
