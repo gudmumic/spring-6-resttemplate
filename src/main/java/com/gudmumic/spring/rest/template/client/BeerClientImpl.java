@@ -34,9 +34,12 @@ public class BeerClientImpl implements BeerClient {
 
         jsonNodeResponseEntity.getBody().findPath("content")
             .forEach(beer -> {
-                  System.out.println("Beer name; " + beer.get("name"));
-                  System.out.println("Beer price; " + beer.get("price"));
-                });
+                System.out.println("Beer name; " + beer.get("name"));
+                System.out.println("Beer price; " + beer.get("price"));
+            });
+
+        ResponseEntity<BeerDTOPageImpl> pageResponseEntity =
+                restTemplate.getForEntity(baseUrl + beerPth, BeerDTOPageImpl.class);
 
         System.out.println(stringResponse.getBody());
 
