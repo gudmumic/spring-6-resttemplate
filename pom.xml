@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>com.gudmumic</groupId>
-    <artifactId>spring-6-resttemplate</artifactId>
+    <artifactId>spring-rest-template</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>spring-rest-template</name>
-    <description>spring-6-rest-template</description>
+    <description>spring-rest-template</description>
 
     <properties>
         <java.version>21</java.version>
