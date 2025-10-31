@@ -42,6 +42,6 @@ public class BeerClientImpl implements BeerClient {
 
         System.out.println(stringResponse.getBody());
 
-        return null;
+        return pageResponseEntity.getBody();
     }
 }
