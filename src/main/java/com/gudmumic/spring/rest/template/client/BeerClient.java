@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 
 public interface BeerClient {
 
-    public Page<BeerDTO> getBeerList();
+    public Page<BeerDTO> getBeerList(String name);
 }
