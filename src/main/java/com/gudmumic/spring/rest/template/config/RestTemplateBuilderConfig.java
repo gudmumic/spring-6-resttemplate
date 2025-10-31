@@ -10,16 +10,16 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class RestTemplateBuilderConfig {
 
-    @Value("${rest.template.rootUrl}")
-    String rootUrl;
+    @Value("${rest.template.baseUrl}")
+    String baseUrl;
 
     @Bean
     RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer) {
 
-        assert rootUrl != null : "Root URL must be set";
+        assert baseUrl != null : "Root URL must be set";
 
         RestTemplateBuilder builder = configurer.configure(new RestTemplateBuilder());
-        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(rootUrl);
+        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(baseUrl);
         return builder.uriTemplateHandler(uriBuilderFactory);
     }
 
