@@ -16,7 +16,6 @@ public class BeerClientImpl implements BeerClient {
 
     private final RestTemplateBuilder restTemplateBuilder;;
 
-    private static final String baseUrl = "http://localhost:8080";
     private static final String beerPth = "/api/v1/beer";
 
     @Override
@@ -24,13 +23,13 @@ public class BeerClientImpl implements BeerClient {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         ResponseEntity<String> stringResponse =
-                restTemplate.getForEntity(baseUrl + beerPth, String.class);
+                restTemplate.getForEntity(beerPth, String.class);
 
         ResponseEntity<Map> mapResponseEntity =
-                restTemplate.getForEntity(baseUrl + beerPth, Map.class);
+                restTemplate.getForEntity(beerPth, Map.class);
 
         ResponseEntity<JsonNode> jsonNodeResponseEntity =
-                restTemplate.getForEntity(baseUrl + beerPth, JsonNode.class);
+                restTemplate.getForEntity(beerPth, JsonNode.class);
 
         jsonNodeResponseEntity.getBody().findPath("content")
             .forEach(beer -> {
@@ -39,7 +38,7 @@ public class BeerClientImpl implements BeerClient {
             });
 
         ResponseEntity<BeerDTOPageImpl> pageResponseEntity =
-                restTemplate.getForEntity(baseUrl + beerPth, BeerDTOPageImpl.class);
+                restTemplate.getForEntity(beerPth, BeerDTOPageImpl.class);
 
         System.out.println(stringResponse.getBody());
 
