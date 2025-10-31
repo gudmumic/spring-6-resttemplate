@@ -2,6 +2,8 @@ package com.gudmumic.spring.rest.template.client;
 
 import com.gudmumic.spring.rest.template.model.BeerDTO;
 import java.util.Map;
+
+import com.gudmumic.spring.rest.template.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
@@ -20,16 +22,35 @@ public class BeerClientImpl implements BeerClient {
     private static final String beerPth = "api/v1/beer";
 
     @Override
-    public Page<BeerDTO> getBeerList(String name) {
+    public Page<BeerDTO> getBeerList() {
+        return this.getBeerList(null, null, null, null, null);
+    }
+
+    @Override
+    public Page<BeerDTO> getBeerList(String name, Integer pageNumber, Integer size, BeerStyle style, Boolean showInventory) {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-                .fromPath(beerPth)
-                .queryParam("pageNumber", 1)
-                .queryParam("pageSize", 25);
+                .fromPath(beerPth);
 
         if (name != null && !name.isEmpty()) {
             uriComponentsBuilder.queryParam("beerName", name);
+        }
+
+        if (pageNumber != null && pageNumber >= 0) {
+            uriComponentsBuilder.queryParam("pageNumber", pageNumber);
+        }
+
+        if (size != null && size > 0) {
+            uriComponentsBuilder.queryParam("size", size);
+        }
+
+        if (style != null) {
+            uriComponentsBuilder.queryParam("beerStyle", style);
+        }
+
+        if (showInventory != null) {
+            uriComponentsBuilder.queryParam("showInventory", showInventory);
         }
 
         ResponseEntity<String> stringResponse =

@@ -23,7 +23,7 @@ class BeerClientImplTest {
     @Test
     void getBeerListTestNoName() {
         assertNotNull(beerClient);
-        Page<BeerDTO> beerClientBeerList = beerClient.getBeerList(null);
+        Page<BeerDTO> beerClientBeerList = beerClient.getBeerList(null, 25, 50, null,false);
         assertThat(beerClientBeerList).isNotNull();
         assertThat(beerClientBeerList.getContent().size()).isGreaterThan(0);
     }
@@ -31,7 +31,7 @@ class BeerClientImplTest {
     @Test
     void getBeerListTestNameParam() {
         assertNotNull(beerClient);
-        Page<BeerDTO> beerClientBeerList = beerClient.getBeerList("ALE");
+        Page<BeerDTO> beerClientBeerList = beerClient.getBeerList("ALE", 25, 50, null,false);
         assertThat(beerClientBeerList).isNotNull();
         assertThat(beerClientBeerList.getContent().size()).isGreaterThan(0);
     }
