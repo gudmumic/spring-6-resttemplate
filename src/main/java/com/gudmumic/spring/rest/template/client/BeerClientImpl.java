@@ -24,8 +24,8 @@ public class BeerClientImpl implements BeerClient {
 
     private final RestTemplateBuilder restTemplateBuilder;;
 
-    private static final String BEER_LIST_PATH = "api/v1/beer";
-    private static final String BEER_BY_ID_PATH = BEER_LIST_PATH + "/{beerId}";
+    public static final String BEER_LIST_PATH = "/api/v1/beer";
+    public static final String BEER_BY_ID_PATH = BEER_LIST_PATH + "/{beerId}";
 
     @Override
     public Page<BeerDTO> getBeerList() {
