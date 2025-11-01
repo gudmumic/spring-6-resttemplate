@@ -1,12 +1,17 @@
 package com.gudmumic.spring.rest.template.client;
 
 import com.gudmumic.spring.rest.template.model.BeerDTO;
+
+import java.net.URI;
 import java.util.Map;
+import java.util.UUID;
 
 import com.gudmumic.spring.rest.template.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +24,8 @@ public class BeerClientImpl implements BeerClient {
 
     private final RestTemplateBuilder restTemplateBuilder;;
 
-    private static final String beerPth = "api/v1/beer";
+    private static final String BEER_LIST_PATH = "api/v1/beer";
+    private static final String BEER_BY_ID_PATH = BEER_LIST_PATH + "/{beerId}";
 
     @Override
     public Page<BeerDTO> getBeerList() {
@@ -31,7 +37,7 @@ public class BeerClientImpl implements BeerClient {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-                .fromPath(beerPth);
+                .fromPath(BEER_LIST_PATH);
 
         if (name != null && !name.isEmpty()) {
             uriComponentsBuilder.queryParam("beerName", name);
@@ -64,15 +70,37 @@ public class BeerClientImpl implements BeerClient {
 
         jsonNodeResponseEntity.getBody().findPath("content")
             .forEach(beer -> {
-                System.out.println("Beer name; " + beer.get("name"));
-                System.out.println("Beer price; " + beer.get("price"));
+                //System.out.println("Beer name; " + beer.get("name"));
+                //System.out.println("Beer price; " + beer.get("price"));
             });
 
         ResponseEntity<BeerDTOPageImpl> pageResponseEntity =
                 restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BeerDTOPageImpl.class);
 
-        System.out.println(stringResponse.getBody());
+        ResponseEntity<RestResponsePage<BeerDTO>> response = restTemplate.exchange(
+                uriComponentsBuilder.toUriString(),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<RestResponsePage<BeerDTO>>() {}
+        );
 
-        return pageResponseEntity.getBody();
+        //System.out.println(stringResponse.getBody());
+
+        return response.getBody();
     }
+
+    @Override
+    public BeerDTO getBeerById(UUID beerId) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        return restTemplate.getForObject(BEER_BY_ID_PATH, BeerDTO.class, beerId);
+    }
+
+    @Override
+    public BeerDTO createBeer(BeerDTO newBeerDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        URI location = restTemplate.postForLocation(BEER_LIST_PATH, newBeerDto);
+        return restTemplate.getForObject(location.getPath(), BeerDTO.class);
+    }
+
 }
