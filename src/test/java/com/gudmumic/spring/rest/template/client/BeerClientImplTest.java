@@ -7,11 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BeerClientImplTest {
@@ -67,5 +68,44 @@ class BeerClientImplTest {
         assertNotNull(savedDto);
     }
 
+    @Test
+    void doPutUpdateBeerTest() {
+
+        BeerDTO newDto = BeerDTO.builder()
+                .price(new BigDecimal("10.99"))
+                .name("Grøn Cola")
+                .style(BeerStyle.PILSNER)
+                .quantityOnHand(500)
+                .upc("123245")
+                .build();
+
+        BeerDTO beerDto = beerClient.createBeer(newDto);
+
+        final String newName = "Royal UniBrew Grøn Cola";
+        beerDto.setName(newName);
+        BeerDTO updatedBeer = beerClient.updateBeer(beerDto);
+
+        assertEquals(newName, updatedBeer.getName());
+    }
+
+    @Test
+    void doDeleteBeer() {
+        BeerDTO newDto = BeerDTO.builder()
+                .price(new BigDecimal("10.99"))
+                .name("Mango Bobs 2")
+                .style(BeerStyle.IPA)
+                .quantityOnHand(500)
+                .upc("123245")
+                .build();
+
+        BeerDTO beerDto = beerClient.createBeer(newDto);
+
+        beerClient.deleteBeer(beerDto.getId());
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            //should error
+            beerClient.getBeerById(beerDto.getId());
+        });
+    }
 
 }

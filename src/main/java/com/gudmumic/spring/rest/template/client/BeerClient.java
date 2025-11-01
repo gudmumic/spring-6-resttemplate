@@ -15,4 +15,8 @@ public interface BeerClient {
     public BeerDTO getBeerById(UUID beerId);
 
     public BeerDTO createBeer(BeerDTO newBeerDto);
+
+    public BeerDTO updateBeer(BeerDTO beerDto);
+
+    public void deleteBeer(UUID beerId);
 }
